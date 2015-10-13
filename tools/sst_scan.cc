@@ -215,14 +215,14 @@ main(
                             {
                                 tot_size+=it2->value().size();
 
-                                if (all_keys)
+                                if (all_keys && it2->value().size() > 1048576)
                                 {
                                     leveldb::ParsedInternalKey parsed;
                                     leveldb::Slice key = it2->key();
                                     leveldb::Slice value = it2->value();
 
                                     ParseInternalKey(key, &parsed);
-                                    printf("%s block_key %s\n", parsed.DebugStringHex().c_str(), table_name.c_str());
+                                    printf("%s block_key %s, value size %d\n", parsed.DebugStringHex().c_str(), table_name.c_str(), it2->value().size());
                                 }   // if
                             }   // if
                             else
@@ -319,8 +319,9 @@ command_help()
     fprintf(stderr, "      -c  print sst counters\n");
     fprintf(stderr, "      -h  print csv formatted header line (once)\n");
     fprintf(stderr, "      -i  print index keys\n");
-    fprintf(stderr, "      -k  print all keys\n");
+    fprintf(stderr, "      -k  print all keys (> 1MB value only) \n");
     fprintf(stderr, "      -n  NO csv data (or header)\n");
+    fprintf(stderr, "                               ** special patched version. **\n");
 }   // command_help
 
 namespace leveldb {
